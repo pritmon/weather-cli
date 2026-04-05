@@ -457,4 +457,89 @@ The core logic modules require zero changes.
 
 ---
 
+---
+
+## 12. Tricky Interview Questions
+
+These are the unexpected, deeper questions an interviewer might throw at you. Straight answers below.
+
+---
+
+**Q: You used `fetch` natively but also listed `node-fetch` as a dependency. Isn't that contradictory?**
+
+A: Valid catch. Native `fetch` was added in Node 18 and became stable in Node 21. `node-fetch` was added early as a safety net for Node 18 edge cases. In hindsight, since the engine field already requires `>=18.0.0` and the CI tests against 18/20/22 where native `fetch` works, `node-fetch` can be removed. It's a leftover from early caution — not a design flaw, but unnecessary weight.
+
+---
+
+**Q: What happens if Open-Meteo changes their API schema and adds a breaking change?**
+
+A: The TypeScript cast `as { current: { temperature_2m: number; ... } }` would silently accept the new shape but the field access would return `undefined` at runtime, producing `NaN` or blank output without crashing. The fix is runtime validation with Zod or a simple field presence check before rendering. This is a known tradeoff — we chose speed of development over defensive validation for a trusted, stable API.
+
+---
+
+**Q: The web UI calls the API directly from the browser. What if Open-Meteo adds CORS restrictions tomorrow?**
+
+A: The web UI would break immediately — all fetch calls would be blocked by the browser. The fix would be to add a thin proxy server (e.g., a Cloudflare Worker or a simple Express endpoint) that relays requests server-side. Currently there's no CORS issue because Open-Meteo explicitly allows cross-origin requests. We accepted this dependency consciously to avoid needing any backend infrastructure.
+
+---
+
+**Q: How would you handle two cities with the same name — e.g., there are multiple "Springfield" cities in the US?**
+
+A: The geocoding API returns results sorted by population by default, so it would return the most prominent Springfield. For the CLI, we take the first result (`results[0]`). A better UX would be to detect multiple results with the same name and prompt the user to disambiguate — e.g., showing "Springfield, Illinois" vs "Springfield, Missouri". The web UI autocomplete already shows the region/country in the dropdown for this reason.
+
+---
+
+**Q: Why does `tsconfig.json` use `"moduleResolution": "bundler"` instead of `"node16"` or `"nodenext"`?**
+
+A: `node16` and `nodenext` enforce that every relative import must explicitly include the `.js` extension in source files and also validate that `package.json` exports maps are correct. They are stricter but cause friction when working with tools that don't yet fully support those modes. `bundler` gives the same ESM-compatible resolution without the strict extension requirement, making it more ergonomic for a CLI project that isn't a published npm package with complex exports.
+
+---
+
+**Q: Your ASCII icons are hardcoded strings. What if a terminal doesn't support Unicode?**
+
+A: The icons use basic ASCII characters — dashes, dots, parentheses — which are safe in any terminal. The lightning bolt `⚡` in the stormy icon is the only Unicode character. If it renders as `?` in an old terminal, the icon still reads as a cloud shape with a line through it. A more robust solution would detect `process.env.TERM` or check for Unicode support via `process.stdout.hasColors()` and fall back to a pure ASCII version.
+
+---
+
+**Q: The `--json` flag outputs to stdout. What if the user redirects stdout to a file and also wants to see errors?**
+
+A: Errors are printed to `stderr` via `console.error()`, not `stdout`. This is intentional Unix design — data goes to stdout, diagnostics go to stderr. So `weather london --json > output.json` captures only the JSON in the file while error messages still appear in the terminal. The two streams are independent.
+
+---
+
+**Q: Why not use `process.env` for configuration like base URLs?**
+
+A: The API URLs are stable, public, and free — there's nothing to configure. Using `process.env` would add complexity (dotenv, `.env` files, documentation) for no real benefit. Configuration via environment variables is appropriate for secrets (API keys, database URLs) or environment-specific values (staging vs prod). Neither applies here. The `.env.example` file exists only as a placeholder for future contributors who might add a paid provider.
+
+---
+
+**Q: You have no rate limiting on the autocomplete. Couldn't a user spam the Open-Meteo API?**
+
+A: Yes — a user who types very fast could trigger many requests. We mitigated this with a **250ms debounce** — the API is only called 250ms after the user stops typing, not on every keystroke. For a tool with a small number of internal users (Adani operations supervisors), this is acceptable. At scale, you'd add server-side rate limiting or a caching layer. Open-Meteo itself has no strict rate limits for normal usage, so the practical risk is low.
+
+---
+
+**Q: The project has no tests. How would you defend that in a code review?**
+
+A: Fair challenge. The honest answer is: this was a rapid-prototype delivery with a 3-day timeline and a simple, narrow scope. The pure functions (`conditionFromCode`, `categorize`, `parseArgs`) have no side effects and are trivially testable. The API integration functions (`geocodeCity`, `fetchWeather`) require mocking `fetch`. The CI smoke test (`node dist/index.js --help`) at least verifies the build artifact is functional. For a production system, I would add Vitest unit tests on day one. The architecture was deliberately kept modular so tests can be added without refactoring.
+
+---
+
+**Q: What's the difference between `chalk.bold.white("text")` and `chalk.white.bold("text")`? Does order matter?**
+
+A: No, the order does not matter for the final output. Chalk chains are commutative for independent modifiers — `bold` and `white` do not conflict, so both produce the same ANSI escape sequence. Order would only matter if two modifiers conflict (e.g., `chalk.red.blue` — in that case the last color wins). This is a chalk implementation detail: each chained property returns a new `ChalkInstance` with the modifier accumulated, and the final string is built by wrapping in all accumulated ANSI codes.
+
+---
+
+**Q: Could this project be turned into an npm package and published publicly?**
+
+A: Almost — three things need to happen first:
+1. The `bin` field in `package.json` already points to `dist/index.js` ✅
+2. Add a `prepublishOnly` script: `"prepublishOnly": "npm run build"` so it compiles before publishing
+3. Add a shebang `#!/usr/bin/env node` at the top of the compiled `dist/index.js` (already in `src/index.ts`) so it runs as an executable
+
+Then `npm publish` would make `npx weather-cli london` work globally. The only blocker is the package name — `weather-cli` may already be taken on the npm registry.
+
+---
+
 *Document generated for the `weather-cli` project — Open-Meteo powered, TypeScript, Node.js 18+*

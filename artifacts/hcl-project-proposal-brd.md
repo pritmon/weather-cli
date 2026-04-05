@@ -7,8 +7,8 @@
 |-------|---------|
 | **Document Type** | Business Requirements Document (BRD) |
 | **Project Name** | Weather Intelligence CLI & Web Dashboard |
-| **Client** | Internal — HCL Logistics Operations Division |
-| **Prepared By** | HCL Technologies — Digital Engineering Practice |
+| **Client** | Internal — Adani Logistics Operations Division |
+| **Prepared By** | Adani Technologies — Digital Engineering Practice |
 | **Version** | 1.0 |
 | **Date** | April 2026 |
 | **Status** | Approved |
@@ -37,7 +37,7 @@
 
 ## 1. Executive Summary
 
-HCL's Logistics Operations Division manages a fleet of 1,200+ delivery drivers across 14 cities in India and Southeast Asia. Operations supervisors currently spend an average of **23 minutes per shift** manually checking weather conditions across multiple browser tabs before dispatching vehicles and rerouting drivers during adverse conditions.
+Adani's Logistics Operations Division manages a fleet of 1,200+ delivery drivers across 14 cities in India and Southeast Asia. Operations supervisors currently spend an average of **23 minutes per shift** manually checking weather conditions across multiple browser tabs before dispatching vehicles and rerouting drivers during adverse conditions.
 
 This document proposes the development of a **Weather Intelligence CLI Tool and Web Dashboard** that provides real-time, structured weather data for any city. The tool will integrate directly into the operations team's existing terminal-based workflow and provide a web interface for supervisors who prefer a visual interface.
 
@@ -65,7 +65,7 @@ During a Q3 Operations Review, the Head of Logistics flagged a near-miss inciden
 
 ### 2.3 Opportunity
 
-The Open-Meteo API provides free, high-quality weather data with no rate limits for standard usage. Building a thin integration layer on top of it gives HCL:
+The Open-Meteo API provides free, high-quality weather data with no rate limits for standard usage. Building a thin integration layer on top of it gives Adani:
 - A controlled, standardised data source
 - The ability to pipe data into existing dispatch systems via JSON
 - A reusable internal tool that can be extended across practices
@@ -79,8 +79,8 @@ The Open-Meteo API provides free, high-quality weather data with no rate limits 
 | Head of Logistics Operations | **Executive Sponsor** | Reduce risk, improve efficiency |
 | Operations Supervisors (×14 hubs) | **Primary Users** | Fast, accurate weather data |
 | Dispatch Software Team | **Integration Consumer** | JSON-structured output for automation |
-| HCL Internal DevOps | **Deployment Owner** | CI/CD, maintenance |
-| HCL Digital Engineering Lead | **Delivery Manager** | On-time delivery, quality |
+| Adani Internal DevOps | **Deployment Owner** | CI/CD, maintenance |
+| Adani Digital Engineering Lead | **Delivery Manager** | On-time delivery, quality |
 | Legal & Compliance | **Reviewer** | Data privacy, third-party API ToS |
 
 ---
@@ -120,7 +120,7 @@ The Open-Meteo API provides free, high-quality weather data with no rate limits 
 | BR-05 | City name entry must be forgiving of spelling errors | Medium | Operations Team |
 | BR-06 | Web interface must be accessible to non-technical supervisors | Medium | Operations Team |
 | BR-07 | Tool must handle network failures gracefully with clear error messages | High | Operations Team |
-| BR-08 | Solution must be maintainable by a junior developer | Medium | HCL DevOps |
+| BR-08 | Solution must be maintainable by a junior developer | Medium | Adani DevOps |
 
 ---
 
@@ -179,8 +179,8 @@ The Open-Meteo API provides free, high-quality weather data with no rate limits 
 
 | Option | Pros | Cons | Decision |
 |--------|------|------|----------|
-| **Node.js + TypeScript CLI** | Familiar to HCL devs, fast, rich ecosystem | Requires Node on user machine | **Selected** |
-| Python CLI | Simple syntax | Not standard in HCL's frontend practice | Rejected |
+| **Node.js + TypeScript CLI** | Familiar to Adani devs, fast, rich ecosystem | Requires Node on user machine | **Selected** |
+| Python CLI | Simple syntax | Not standard in Adani's frontend practice | Rejected |
 | Go CLI | Single binary, fast | Less familiar, longer build time | Rejected |
 | Shell script | No dependencies | Not portable, hard to maintain | Rejected |
 
@@ -372,12 +372,12 @@ The project will be considered complete when all of the following are verified:
 | Role | Name | Signature | Date |
 |------|------|-----------|------|
 | Executive Sponsor | Head of Logistics Operations | _______________ | ________ |
-| Delivery Manager | HCL Digital Engineering Lead | _______________ | ________ |
+| Delivery Manager | Adani Digital Engineering Lead | _______________ | ________ |
 | Business Analyst | BA — Operations Practice | _______________ | ________ |
 | Technical Lead | Senior Developer | _______________ | ________ |
 | Client Representative | Operations IT Manager | _______________ | ________ |
 
 ---
 
-*Document Version 1.0 — HCL Technologies, Digital Engineering Practice*
-*For internal use only. Not for distribution outside HCL and client stakeholders.*
+*Document Version 1.0 — Adani Technologies, Digital Engineering Practice*
+*For internal use only. Not for distribution outside Adani and client stakeholders.*
