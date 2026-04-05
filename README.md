@@ -1,6 +1,6 @@
 # weather-cli
 
-[![CI](https://github.com/your-username/weather-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/weather-cli/actions/workflows/ci.yml)
+[![CI](https://github.com/pritmon/weather-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/pritmon/weather-cli/actions/workflows/ci.yml)
 [![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
