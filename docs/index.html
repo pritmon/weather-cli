@@ -29,7 +29,6 @@
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     }
 
-    /* Sunny */
     body.sunny #bg {
       background: linear-gradient(135deg, #f7971e 0%, #ffd200 40%, #f7971e 100%);
       animation: sunPulse 6s ease-in-out infinite;
@@ -39,27 +38,19 @@
       50%       { background: linear-gradient(155deg,#ff8c00 0%,#ffe259 40%,#f7971e 100%); }
     }
 
-    /* Rainy */
     body.rainy #bg  { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
     body.drizzle #bg{ background: linear-gradient(135deg, #1c3349 0%, #2d5178 50%, #3d7ab5 100%); }
 
-    /* Cloudy */
     body.cloudy #bg { background: linear-gradient(135deg, #3d3d3d 0%, #525252 50%, #3d3d3d 100%); animation: cloudDrift 12s ease-in-out infinite; }
     @keyframes cloudDrift {
       0%,100%{ background-position: 0% 50%; }
       50%    { background-position: 100% 50%; }
     }
 
-    /* Snowy */
     body.snowy #bg  { background: linear-gradient(135deg, #0d1b2a 0%, #1b3a4b 50%, #2c5f7a 100%); }
-
-    /* Stormy */
     body.stormy #bg { background: linear-gradient(135deg, #1a0533 0%, #2d1b69 50%, #11052c 100%); }
-
-    /* Foggy */
     body.foggy #bg  { background: linear-gradient(135deg, #636363 0%, #a2a2a2 50%, #636363 100%); }
 
-    /* Sun rays */
     #sun-rays {
       display: none;
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
@@ -69,7 +60,6 @@
     body.sunny #sun-rays { display: block; }
     @keyframes rayRotate { to { transform: rotate(360deg); } }
 
-    /* ─── PARTICLES CANVAS ───────────────────────────────────── */
     canvas#particles { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
 
     /* ─── LAYOUT ─────────────────────────────────────────────── */
@@ -84,6 +74,7 @@
     .search-wrap {
       width: 100%; max-width: 480px;
       margin-bottom: 40px;
+      position: relative;
     }
 
     .search-box {
@@ -96,6 +87,7 @@
       -webkit-backdrop-filter: blur(16px);
       box-shadow: var(--glass-shadow);
       transition: box-shadow var(--transition), border-color var(--transition);
+      position: relative; z-index: 2;
     }
     .search-box:focus-within {
       border-color: rgba(255,255,255,0.5);
@@ -118,6 +110,41 @@
     .search-btn svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; }
     .search-box > svg { width: 18px; height: 18px; stroke: rgba(255,255,255,0.5); fill: none; stroke-width: 2; flex-shrink: 0; }
 
+    /* ─── AUTOCOMPLETE DROPDOWN ──────────────────────────────── */
+    .suggestions {
+      position: absolute;
+      top: calc(100% - 16px);
+      left: 0; right: 0;
+      background: rgba(20, 25, 50, 0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      padding-top: 16px;
+      overflow: hidden;
+      z-index: 1;
+      display: none;
+      box-shadow: var(--glass-shadow);
+    }
+    .suggestions.open { display: block; }
+
+    .suggestion-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .suggestion-item:first-child { border-top: none; }
+    .suggestion-item:hover,
+    .suggestion-item.active { background: rgba(255,255,255,0.1); }
+
+    .suggestion-icon { font-size: 1.1rem; flex-shrink: 0; opacity: 0.8; }
+    .suggestion-text { display: flex; flex-direction: column; }
+    .suggestion-name { font-size: 0.95rem; font-weight: 600; }
+    .suggestion-meta { font-size: 0.78rem; opacity: 0.5; margin-top: 2px; }
+
     /* ─── CARD ───────────────────────────────────────────────── */
     .card {
       width: 100%; max-width: 520px;
@@ -133,108 +160,49 @@
     }
     .card.visible { opacity: 1; transform: translateY(0); }
 
-    /* Temperature */
-    .temp-display {
-      text-align: center;
-      margin-bottom: 8px;
-    }
+    .temp-display { text-align: center; margin-bottom: 8px; }
     .temp-value {
       font-size: clamp(80px, 18vw, 120px);
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -4px;
+      font-weight: 800; line-height: 1; letter-spacing: -4px;
       background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-    .temp-unit {
-      font-size: clamp(36px, 8vw, 56px);
-      font-weight: 300;
-      vertical-align: super;
-      opacity: 0.7;
-    }
+    .temp-unit { font-size: clamp(36px, 8vw, 56px); font-weight: 300; vertical-align: super; opacity: 0.7; }
 
-    /* City */
     .city-name {
-      text-align: center;
-      font-size: clamp(1.4rem, 5vw, 2rem);
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-      opacity: 0.95;
+      text-align: center; font-size: clamp(1.4rem, 5vw, 2rem);
+      font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; opacity: 0.95;
     }
-    .city-region {
-      text-align: center;
-      font-size: 0.95rem;
-      opacity: 0.55;
-      margin-bottom: 16px;
-    }
+    .city-region { text-align: center; font-size: 0.95rem; opacity: 0.55; margin-bottom: 16px; }
 
-    /* Condition */
     .condition {
-      text-align: center;
-      font-size: 1.25rem;
-      font-weight: 500;
-      opacity: 0.9;
-      margin-bottom: 36px;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
+      text-align: center; font-size: 1.25rem; font-weight: 500; opacity: 0.9;
+      margin-bottom: 36px; display: flex; align-items: center; justify-content: center; gap: 10px;
     }
     .condition-emoji { font-size: 1.8rem; }
 
-    /* ─── STATS ROW ──────────────────────────────────────────── */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
+    /* ─── STATS ──────────────────────────────────────────────── */
+    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
     .stat-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px;
-      padding: 16px 18px;
-      display: flex; flex-direction: column; gap: 4px;
-      transition: background var(--transition);
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 16px 18px;
+      display: flex; flex-direction: column; gap: 4px; transition: background var(--transition);
     }
     .stat-card:hover { background: rgba(255,255,255,0.12); }
-    .stat-label {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      opacity: 0.5;
-      font-weight: 600;
-    }
-    .stat-value {
-      font-size: 1.35rem;
-      font-weight: 700;
-      opacity: 0.95;
-    }
-    .stat-sub {
-      font-size: 0.78rem;
-      opacity: 0.45;
-    }
+    .stat-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.2px; opacity: 0.5; font-weight: 600; }
+    .stat-value { font-size: 1.35rem; font-weight: 700; opacity: 0.95; }
+    .stat-sub { font-size: 0.78rem; opacity: 0.45; }
 
     /* ─── SKELETON ───────────────────────────────────────────── */
     .skeleton {
-      background: linear-gradient(90deg,
-        rgba(255,255,255,0.06) 25%,
-        rgba(255,255,255,0.12) 50%,
-        rgba(255,255,255,0.06) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.06) 75%);
+      background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 10px;
     }
     @keyframes shimmer { to { background-position: -200% 0; } }
-
     .skeleton-card {
-      width: 100%; max-width: 520px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      backdrop-filter: blur(24px);
-      padding: 40px 36px 36px;
-      display: none;
+      width: 100%; max-width: 520px; background: var(--glass-bg);
+      border: 1px solid var(--glass-border); border-radius: var(--radius);
+      backdrop-filter: blur(24px); padding: 40px 36px 36px; display: none;
     }
     .skeleton-card.active { display: block; }
     .sk-line { height: 16px; margin-bottom: 12px; }
@@ -246,14 +214,9 @@
 
     /* ─── ERROR ──────────────────────────────────────────────── */
     .error-box {
-      width: 100%; max-width: 520px;
-      background: rgba(239,68,68,0.12);
-      border: 1px solid rgba(239,68,68,0.3);
-      border-radius: var(--radius);
-      backdrop-filter: blur(16px);
-      padding: 28px 32px;
-      text-align: center;
-      display: none;
+      width: 100%; max-width: 520px; background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius);
+      backdrop-filter: blur(16px); padding: 28px 32px; text-align: center; display: none;
     }
     .error-box.active { display: block; }
     .error-icon { font-size: 2.5rem; margin-bottom: 12px; }
@@ -261,16 +224,9 @@
     .error-msg { font-size: 0.95rem; opacity: 0.7; }
 
     /* ─── FOOTER ─────────────────────────────────────────────── */
-    .footer {
-      margin-top: auto;
-      padding-top: 48px;
-      font-size: 0.8rem;
-      opacity: 0.35;
-      text-align: center;
-    }
+    .footer { margin-top: auto; padding-top: 48px; font-size: 0.8rem; opacity: 0.35; text-align: center; }
     .footer a { color: inherit; }
 
-    /* ─── RESPONSIVE ─────────────────────────────────────────── */
     @media (max-width: 420px) {
       .card { padding: 28px 20px 24px; }
       .stats { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -291,6 +247,7 @@
           <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </div>
+      <div class="suggestions" id="suggestions"></div>
     </div>
 
     <!-- Skeleton -->
@@ -390,126 +347,61 @@
     /* ─── PARTICLE ENGINE ───────────────────────────────────── */
     const canvas = document.getElementById("particles");
     const ctx    = canvas.getContext("2d");
-    let particles = [];
-    let animId;
-    let currentCategory = null;
+    let particles = [], animId, currentCategory = null;
 
-    function resizeCanvas() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
     class Particle {
-      constructor(type) {
-        this.type = type;
-        this.reset(true);
-      }
+      constructor(type) { this.type = type; this.reset(true); }
       reset(init = false) {
         this.x = Math.random() * canvas.width;
         this.y = init ? Math.random() * canvas.height : -10;
         this.opacity = Math.random() * 0.6 + 0.2;
-        if (this.type === "rain") {
-          this.speed = Math.random() * 8 + 10;
-          this.len   = Math.random() * 18 + 10;
-          this.angle = Math.PI / 6;
-        } else if (this.type === "snow") {
-          this.speed  = Math.random() * 1.5 + 0.5;
-          this.radius = Math.random() * 3 + 1;
-          this.drift  = Math.random() * 0.8 - 0.4;
-          this.wobble = Math.random() * Math.PI * 2;
-        } else if (this.type === "orb") {
-          this.radius = Math.random() * 3 + 1;
-          this.speed  = Math.random() * 0.8 + 0.2;
-          this.drift  = Math.random() * 1 - 0.5;
-          if (init) this.y = Math.random() * canvas.height;
-        }
+        if (this.type === "rain") { this.speed = Math.random() * 8 + 10; this.len = Math.random() * 18 + 10; this.angle = Math.PI / 6; }
+        else if (this.type === "snow") { this.speed = Math.random() * 1.5 + 0.5; this.radius = Math.random() * 3 + 1; this.drift = Math.random() * 0.8 - 0.4; this.wobble = Math.random() * Math.PI * 2; }
+        else if (this.type === "orb") { this.radius = Math.random() * 3 + 1; this.speed = Math.random() * 0.8 + 0.2; this.drift = Math.random() * 1 - 0.5; if (init) this.y = Math.random() * canvas.height; }
       }
       update() {
-        if (this.type === "rain") {
-          this.y += this.speed;
-          this.x += Math.tan(this.angle) * this.speed * 0.3;
-          if (this.y > canvas.height) this.reset();
-        } else if (this.type === "snow") {
-          this.wobble += 0.02;
-          this.y += this.speed;
-          this.x += Math.sin(this.wobble) * this.drift;
-          if (this.y > canvas.height) this.reset();
-        } else if (this.type === "orb") {
-          this.y -= this.speed;
-          this.x += this.drift;
-          if (this.y < -10) this.reset();
-        }
+        if (this.type === "rain") { this.y += this.speed; this.x += Math.tan(this.angle) * this.speed * 0.3; if (this.y > canvas.height) this.reset(); }
+        else if (this.type === "snow") { this.wobble += 0.02; this.y += this.speed; this.x += Math.sin(this.wobble) * this.drift; if (this.y > canvas.height) this.reset(); }
+        else if (this.type === "orb") { this.y -= this.speed; this.x += this.drift; if (this.y < -10) this.reset(); }
       }
       draw() {
         ctx.globalAlpha = this.opacity;
-        if (this.type === "rain") {
-          ctx.strokeStyle = "rgba(174,214,241,0.7)";
-          ctx.lineWidth   = 1;
-          ctx.beginPath();
-          ctx.moveTo(this.x, this.y);
-          ctx.lineTo(this.x + Math.sin(this.angle) * this.len, this.y + this.len);
-          ctx.stroke();
-        } else if (this.type === "snow") {
-          ctx.fillStyle = "rgba(255,255,255,0.85)";
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (this.type === "orb") {
-          const grad = ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.radius*3);
-          grad.addColorStop(0,"rgba(255,255,255,0.25)");
-          grad.addColorStop(1,"transparent");
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.radius*3, 0, Math.PI*2);
-          ctx.fill();
-        }
+        if (this.type === "rain") { ctx.strokeStyle = "rgba(174,214,241,0.7)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(this.x + Math.sin(this.angle) * this.len, this.y + this.len); ctx.stroke(); }
+        else if (this.type === "snow") { ctx.fillStyle = "rgba(255,255,255,0.85)"; ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fill(); }
+        else if (this.type === "orb") { const g = ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.radius*3); g.addColorStop(0,"rgba(255,255,255,0.25)"); g.addColorStop(1,"transparent"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(this.x, this.y, this.radius*3, 0, Math.PI*2); ctx.fill(); }
         ctx.globalAlpha = 1;
       }
     }
 
     function spawnParticles(category) {
-      cancelAnimationFrame(animId);
-      particles = [];
-      let type  = null;
-      let count = 0;
-      if (category === "rainy" || category === "drizzle") { type="rain";  count=80; }
-      else if (category === "snowy")                       { type="snow";  count=120; }
+      cancelAnimationFrame(animId); particles = [];
+      let type = null, count = 0;
+      if (category === "rainy" || category === "drizzle") { type="rain"; count=80; }
+      else if (category === "snowy") { type="snow"; count=120; }
       else if (category === "sunny" || category === "stormy") { type="orb"; count=40; }
       if (!type) return;
       for (let i=0; i<count; i++) particles.push(new Particle(type));
-      (function loop() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        particles.forEach(p=>{ p.update(); p.draw(); });
-        animId = requestAnimationFrame(loop);
-      })();
+      (function loop() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{ p.update(); p.draw(); }); animId = requestAnimationFrame(loop); })();
     }
 
-    /* Lightning flash for stormy */
     function triggerLightning() {
       const flash = document.createElement("div");
-      Object.assign(flash.style, {
-        position:"fixed",inset:"0",background:"rgba(200,160,255,0.18)",
-        pointerEvents:"none",zIndex:"5",transition:"opacity 0.15s"
-      });
+      Object.assign(flash.style, { position:"fixed",inset:"0",background:"rgba(200,160,255,0.18)",pointerEvents:"none",zIndex:"5",transition:"opacity 0.15s" });
       document.body.appendChild(flash);
       setTimeout(()=>{ flash.style.opacity="0"; setTimeout(()=>flash.remove(),200); },80);
     }
     let lightningTimer;
 
-    /* ─── APPLY THEME ───────────────────────────────────────── */
     function applyTheme(category) {
-      const categories = ["sunny","cloudy","rainy","drizzle","snowy","stormy","foggy"];
-      categories.forEach(c => document.body.classList.remove(c));
+      ["sunny","cloudy","rainy","drizzle","snowy","stormy","foggy"].forEach(c => document.body.classList.remove(c));
       document.body.classList.add(category);
       spawnParticles(category);
       clearInterval(lightningTimer);
-      if (category === "stormy") {
-        lightningTimer = setInterval(()=>{
-          if (Math.random() < 0.4) triggerLightning();
-        }, 3000);
-      }
+      if (category === "stormy") lightningTimer = setInterval(()=>{ if (Math.random() < 0.4) triggerLightning(); }, 3000);
       currentCategory = category;
     }
 
@@ -518,72 +410,151 @@
     const $skeleton = document.getElementById("skeleton");
     const $errorBox = document.getElementById("error-box");
 
-    function showSkeleton()   { $skeleton.classList.add("active"); $card.classList.remove("visible"); $errorBox.classList.remove("active"); }
-    function hideSkeleton()   { $skeleton.classList.remove("active"); }
-    function showCard()       { $card.classList.add("visible"); }
-    function showError(msg)   { hideSkeleton(); $errorBox.classList.add("active"); document.getElementById("error-msg").textContent = msg; }
+    function showSkeleton() { $skeleton.classList.add("active"); $card.classList.remove("visible"); $errorBox.classList.remove("active"); }
+    function hideSkeleton() { $skeleton.classList.remove("active"); }
+    function showCard()     { $card.classList.add("visible"); }
+    function showError(msg) { hideSkeleton(); $errorBox.classList.add("active"); document.getElementById("error-msg").textContent = msg; }
 
-    /* ─── FETCH + RENDER ────────────────────────────────────── */
-    async function loadWeather(city) {
-      if (!city.trim()) return;
+    /* ─── AUTOCOMPLETE ──────────────────────────────────────── */
+    const input       = document.getElementById("city-input");
+    const $suggestions = document.getElementById("suggestions");
+    let debounceTimer = null;
+    let activeIndex   = -1;
+    let suggestionData = [];
+
+    function closeSuggestions() {
+      $suggestions.classList.remove("open");
+      activeIndex = -1;
+    }
+
+    function renderSuggestions(results) {
+      suggestionData = results;
+      $suggestions.innerHTML = "";
+      if (!results.length) { closeSuggestions(); return; }
+
+      results.forEach((r, i) => {
+        const meta = [r.admin1, r.country].filter(Boolean).join(", ");
+        const div  = document.createElement("div");
+        div.className = "suggestion-item";
+        div.innerHTML = `<span class="suggestion-icon">📍</span>
+          <span class="suggestion-text">
+            <span class="suggestion-name">${r.name}</span>
+            <span class="suggestion-meta">${meta}</span>
+          </span>`;
+        div.addEventListener("mousedown", (e) => {
+          e.preventDefault(); // prevent input blur before click fires
+          input.value = r.name;
+          closeSuggestions();
+          loadWeatherFromGeo(r);
+        });
+        $suggestions.appendChild(div);
+      });
+      $suggestions.classList.add("open");
+      activeIndex = -1;
+    }
+
+    function highlightItem(index) {
+      const items = $suggestions.querySelectorAll(".suggestion-item");
+      items.forEach((el, i) => el.classList.toggle("active", i === index));
+    }
+
+    async function fetchSuggestions(query) {
+      if (query.length < 2) { closeSuggestions(); return; }
+      try {
+        const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`;
+        const res  = await fetch(url);
+        const data = await res.json();
+        renderSuggestions(data.results ?? []);
+      } catch { closeSuggestions(); }
+    }
+
+    input.addEventListener("input", () => {
+      clearTimeout(debounceTimer);
+      const val = input.value.trim();
+      if (!val) { closeSuggestions(); return; }
+      debounceTimer = setTimeout(() => fetchSuggestions(val), 250);
+    });
+
+    input.addEventListener("keydown", (e) => {
+      const items = $suggestions.querySelectorAll(".suggestion-item");
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        activeIndex = Math.min(activeIndex + 1, items.length - 1);
+        highlightItem(activeIndex);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        activeIndex = Math.max(activeIndex - 1, -1);
+        highlightItem(activeIndex);
+      } else if (e.key === "Enter") {
+        if (activeIndex >= 0 && suggestionData[activeIndex]) {
+          input.value = suggestionData[activeIndex].name;
+          closeSuggestions();
+          loadWeatherFromGeo(suggestionData[activeIndex]);
+        } else {
+          closeSuggestions();
+          loadWeather(input.value);
+        }
+      } else if (e.key === "Escape") {
+        closeSuggestions();
+      }
+    });
+
+    input.addEventListener("blur", () => setTimeout(closeSuggestions, 150));
+
+    document.getElementById("search-btn").addEventListener("click", () => {
+      closeSuggestions();
+      loadWeather(input.value);
+    });
+
+    /* ─── WEATHER FETCH ─────────────────────────────────────── */
+    async function loadWeatherFromGeo(loc) {
       showSkeleton();
       $errorBox.classList.remove("active");
-
       try {
-        // Geocode
-        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
-        const geoRes = await fetch(geoUrl);
-        const geoData = await geoRes.json();
-        if (!geoData.results?.length) { showError(`City "${city}" not found. Try a different spelling.`); return; }
-        const loc = geoData.results[0];
-
-        // Weather
         const wxUrl = `https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,uv_index,weather_code,is_day&temperature_unit=celsius&wind_speed_unit=kmh`;
-        const wxRes = await fetch(wxUrl);
+        const wxRes  = await fetch(wxUrl);
         const wxData = await wxRes.json();
         const c = wxData.current;
-
-        const code     = c.weather_code;
-        const category = getCategory(code);
+        const code      = c.weather_code;
+        const category  = getCategory(code);
         const condition = WMO[code] ?? "Unknown";
 
-        // Populate DOM
-        document.getElementById("temp").textContent      = Math.round(c.temperature_2m);
-        document.getElementById("city-name").textContent = loc.name;
+        document.getElementById("temp").textContent        = Math.round(c.temperature_2m);
+        document.getElementById("city-name").textContent   = loc.name;
         document.getElementById("city-region").textContent = [loc.admin1, loc.country].filter(Boolean).join(", ");
-        document.getElementById("cond-emoji").textContent = EMOJIS[category];
-        document.getElementById("cond-text").textContent  = condition;
-        document.getElementById("feels-like").textContent = `${Math.round(c.apparent_temperature)}°C`;
-        document.getElementById("humidity").textContent   = `${c.relative_humidity_2m}%`;
-        document.getElementById("wind").textContent       = `${Math.round(c.wind_speed_10m)} km/h`;
-        document.getElementById("uv").textContent         = c.uv_index.toFixed(1);
-        document.getElementById("uv-label").textContent   = uvLabel(c.uv_index);
-
-        // Title
+        document.getElementById("cond-emoji").textContent  = EMOJIS[category];
+        document.getElementById("cond-text").textContent   = condition;
+        document.getElementById("feels-like").textContent  = `${Math.round(c.apparent_temperature)}°C`;
+        document.getElementById("humidity").textContent    = `${c.relative_humidity_2m}%`;
+        document.getElementById("wind").textContent        = `${Math.round(c.wind_speed_10m)} km/h`;
+        document.getElementById("uv").textContent          = c.uv_index.toFixed(1);
+        document.getElementById("uv-label").textContent    = uvLabel(c.uv_index);
         document.title = `${loc.name} — ${Math.round(c.temperature_2m)}°C`;
 
         applyTheme(category);
         hideSkeleton();
         showCard();
-
-      } catch (err) {
+      } catch {
         showError("Network error. Check your internet connection and try again.");
       }
     }
 
-    /* ─── EVENTS ────────────────────────────────────────────── */
-    const input = document.getElementById("city-input");
+    async function loadWeather(city) {
+      if (!city.trim()) return;
+      showSkeleton();
+      $errorBox.classList.remove("active");
+      try {
+        const geoUrl  = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
+        const geoRes  = await fetch(geoUrl);
+        const geoData = await geoRes.json();
+        if (!geoData.results?.length) { showError(`City "${city}" not found. Try a different spelling.`); return; }
+        await loadWeatherFromGeo(geoData.results[0]);
+      } catch {
+        showError("Network error. Check your internet connection and try again.");
+      }
+    }
 
-    document.getElementById("search-btn").addEventListener("click", () => loadWeather(input.value));
-
-    input.addEventListener("keydown", e => {
-      if (e.key === "Enter") loadWeather(input.value);
-    });
-
-    // Default on load
-    window.addEventListener("DOMContentLoaded", () => {
-      applyTheme("cloudy"); // default ambient
-    });
+    window.addEventListener("DOMContentLoaded", () => applyTheme("cloudy"));
   </script>
 </body>
 </html>
