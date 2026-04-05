@@ -13,8 +13,7 @@ Beautiful terminal weather for any city — powered by [Open-Meteo](https://open
 
 **Live web UI:** [pritmon.github.io/weather-cli](https://pritmon.github.io/weather-cli)
 
-> ![demo coming soon](https://via.placeholder.com/720x400?text=demo+coming+soon)
-> *CLI demo GIF coming soon*
+> CLI demo GIF coming soon
 
 ---
 
