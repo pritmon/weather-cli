@@ -20,7 +20,7 @@
     "open-meteo",
     "typescript"
   ],
-  "author": "",
+  "author": "Pritam Mondal",
   "license": "MIT",
   "dependencies": {
     "chalk": "^5.3.0",
@@ -28,7 +28,11 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0"
   },
   "engines": {
     "node": ">=18.0.0"

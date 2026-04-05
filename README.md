@@ -13,7 +13,7 @@ Beautiful terminal weather for any city — powered by [Open-Meteo](https://open
 
 **Live web UI:** [pritmon.github.io/weather-cli](https://pritmon.github.io/weather-cli)
 
-> CLI demo GIF coming soon
+> Visit the live demo: [pritmon.github.io/weather-cli](https://pritmon.github.io/weather-cli)
 
 ---
 
@@ -53,7 +53,7 @@ Beautiful terminal weather for any city — powered by [Open-Meteo](https://open
 ### From source
 
 ```bash
-git clone https://github.com/your-username/weather-cli.git
+git clone https://github.com/pritmon/weather-cli.git
 cd weather-cli
 npm install
 npm run build
